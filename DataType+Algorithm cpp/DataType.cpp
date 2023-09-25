@@ -207,6 +207,24 @@ namespace DataType
 
 	}
 
+	template<typename T>
+	typename DynamicArray<T>::iterator DynamicArray<T>::begin()
+	{
+		if (iCount == 0)
+		{
+			return iterator(this, dArr, -1); //begin() = end()
+		}
+		//시작을 가리키는 iterator를 만들어서 반환해줘야함
+		return iterator(this,dArr, 0);
+	}
+	template<typename T>
+	typename DynamicArray<T>::iterator DynamicArray<T>::end()
+	{
+
+		//끝을 가리키는 iterator를 만들어서 반환해줘야함
+		return  iterator(this, dArr, -1);
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////
 	template<class T>
 	iNode<T>::iNode() :data(0), nextPtr(nullptr), prevPtr(nullptr) {}
@@ -250,7 +268,7 @@ namespace DataType
 	template<class T>
 	LinkedList<T>::~LinkedList()
 	{
-
+		
 	}
 	//앞에 추가
 	template<class T>
