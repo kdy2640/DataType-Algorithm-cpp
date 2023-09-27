@@ -1,10 +1,15 @@
 #ifndef __DOUBLYLINKEDLISTNODE__
 #define __DOUBLYLINKEDLISTNODE__
 #include<iostream>
+#include<cassert>
 using namespace std;
 
 namespace DataType
 {
+
+	// Node for arbitary data type.
+	// But, have to overload operatior = (int) - Default Constructor
+	//                       operator == (data_type) - 
 	template<class T>
 	class dNode
 	{
@@ -35,25 +40,31 @@ namespace DataType
 	template<class T>
 	dNode<T>::dNode()
 	{
-		// Constructor implementation here
+		nextPtr = nullptr;
+		prevPtr = nullptr;
+		data = 0;
 	}
 
 	template<class T>
 	dNode<T>::dNode(T _data, dNode* _prevPtr, dNode* _nextPtr)
 	{
-		// Constructor implementation here
+		nextPtr = _nextPtr;
+		prevPtr = _prevPtr;
+		data = _data;
 	}
 
 	template<class T>
 	dNode<T>::dNode(const dNode& _dNode)
 	{
-		// Constructor implementation here
+		nextPtr = _dNode.nextPtr;
+		prevPtr = _dNode.prevPtr;
+		data = _dNode.data;
 	}
 
 	template<class T>
 	dNode<T>::~dNode()
 	{
-		// Destructor implementation here
+		// Nothing to do.
 	}
 
 	///////////////////////////////////////////////////////////
@@ -62,37 +73,37 @@ namespace DataType
 	template<class T>
 	void dNode<T>::setData(T _data)
 	{
-		// Implementation for setData
+		data = _data;
 	}
 
 	template<class T>
 	T dNode<T>::getData() const
 	{
-		// Implementation for getData
+		return data;
 	}
 
 	template<class T>
 	void dNode<T>::setNextPtr(dNode* _nextPtr)
 	{
-		// Implementation for setNextPtr
+		nextPtr = _nextPtr;
 	}
 
 	template<class T>
 	dNode<T>* dNode<T>::getNextPtr() const
 	{
-		// Implementation for getNextPtr
+		return nextPtr;
 	}
 
 	template<class T>
 	void dNode<T>::setPrevPtr(dNode* _prevPtr)
 	{
-		// Implementation for setPrevPtr
+		prevPtr = _prevPtr;
 	}
 
 	template<class T>
 	dNode<T>* dNode<T>::getPrevPtr() const
 	{
-		// Implementation for getPrevPtr
+		return prevPtr;
 	}
 #pragma endregion dNodeMemberFunction
 
@@ -100,36 +111,183 @@ namespace DataType
 
 	//PostCondition : return true if _dNodePtr is nullptr. 
 	//                return false. if not. 
+	template<class T>
 	bool isNullPtr(dNode<T>* _dNodePtr)
 	{
 		if (_dNodePtr == nullptr)
-			cout << "Error : NullPointer received. \n" << endl;
+			cout << "Error : NullPointer received. \n";
 			return true;
 		return false;
 	}
+
 
 	//PostCondition : return length(Count) of LinkedList
 	template<class T>
 	int list_length(dNode<T>* _headPtr)
 	{
 
+		dNode<T>* now = _headPtr;
+		int count = 0;
+		// loop until now is nullptr
+		while (now != nullptr)
+		{
+			now = now->getNextPtr();
+			++count;
+		}
+
+		return count;
 	}
 
+
 	//PostCondition : return pointer of dNode which data is _data. 
-	//                return nullptr when cannot found _data
+	//                return nullptr when cannot found _data.
 	template<class T>
 	dNode<T>* list_search(dNode<T>* _headPtr, T _data)
 	{
+		//NullPtr Check
+		assert(!isNullPtr(_headPtr));
+
+		dNode<T>* now = _headPtr;
+
+		// loop until now is nullptr
+		while (now != nullptr)
+		{
+			if (now->getData() == _data)
+			{
+				return now;
+			}
+			now = now->getNextPtr();
+		}
+
+		return nullptr;
 
 	}
 	
+
 	//PreCondition  : _index is not out of range - can handle : 0 ~ Count-1
 	//PostCondition : return data of dNode which is in _index th . 
+	//				  return -1 when cannnot found _data or Index out of range
 	template<class T>
-	T list_locate(dNode<T>* _headPtr, int _index)
+	dNode<T>* list_locate(dNode<T>* _headPtr, int _index)
 	{
+		//NullPtr Check
+		assert(!isNullPtr(_headPtr));
+
+		dNode<T>* now = _headPtr;
+		int index = 0;
+
+
+		// loop until now is nullptr
+		while (now != nullptr)
+		{
+			if (index == _index)
+			{
+				return now();
+			}
+			++index;
+			now = now->getNextPtr();
+		}
+
+		//Index Out of Range
+		if (index <= _index)
+		{
+			cout<< "ERROR : Index Out Of Range. \n"
+		}
+
+		return -1;
 
 	}
+
+
+	//PostCondition : change _headPtr to new node and linking node 
+	template<class T>
+	void list_head_insert(dNode<T>*& _headPtr, T _data)
+	{
+		//NullPtr Check
+		assert(!isNullPtr(_headPtr)) ;
+
+
+		// create newNode which prevptr is nullptr and nextPtr is _headPtr's next node.
+		dNode<T>* newNode = new dNode<T>(_data, nullptr, _headPtr->getNextPtr());
+		// change _headPtr;
+		_headPtr = newNode;
+		// set next of newNode's prevPTr to new node
+		newNode->getNextPtr()->setPrevPtr(newNode);
+
+	}
+
+
+    //PostCondition : insert after _prevPtr and linking node.
+	template<class T>
+	void list_insert(dNode<T>* _prevPtr, T _data)
+	{
+		//NullPtr Check
+		assert(!isNullPtr(_prevPtr));
+		
+		// create new node which prevptr is nullptr and nextPtr is _prevPtr's next node.
+		dNode<T>* newNode = new dNode<T>(_data, nullptr, _prevPtr->getNextPtr());
+		// set _prevPtr's nextPtr to newNode
+		_prevPtr->setNextPtr(newNode);
+
+		//Check for _prevPr is tail == ( newNode's nextPtr = null )
+		if (newNode->getNextPtr() != nullptr)
+		{
+			//set prevPtr of newNode's nextPtr to newNode;
+			newNode->getNextPtr()->setPrevPtr(newNode);
+		}
+	}
+
+
+	//PostCondition : remove first Node and replace _headPtr to second Node
+	//                if there is no second Node, _headPtr will be nullptr
+ 	template<class T>
+	void list_head_remove(dNode<T>*& _headPtr)
+	{
+		//NullPtr Check
+		assert(!isNullPtr(_headPtr));
+
+		dNode<T>* temp = _headPtr;
+		// set _headPtr to second Node
+		_headPtr = _headPtr->getNextPtr();
+
+		// Check for only one node
+		if (_headPtr != nullptr)
+		{
+			// set first Node's prevPtr to nullptr
+			_headPtr->setPrevPtr(nullptr);
+		}
+		//delete previous first 
+		delete temp;
+	}
+
+	//PreCondition  : _prevPtr is not be Tail Node
+	//PostCondition : remove next Node of _prevPtr and linking Node
+	//                if there is no next next Node, _prevPtr's nextPtr will be nullptr
+	template<class T>
+	void list_remove(dNode<T>* _prevPtr)
+	{
+		//NullPtr Check
+		assert(!isNullPtr(_prevPtr));
+		assert(!isNullPtr(_prevPtr->getNextPtr()));
+		
+		dNode<T>* temp = _prevPtr->getNextPtr();
+		//set _prevPtr's nextPtr to its next next Node
+		_prevPtr->setNextPtr(temp->getNextPtr());
+
+		// Check for only one node after _prevPtr;
+		if (temp->getNextPtr() != nullptr)
+		{
+			//set _prevPtr's next next Node's prevPtr to _prevPtr
+			temp->getNextPtr()->setPrevPtr(_prevPtr);
+		}
+
+		//delete _prevPtr's next Node
+		delete temp;
+		
+	}
+
+	// list_clear, and list_copy list_search_inverse
+
 	
 #pragma endregion dNodeFunction
 
