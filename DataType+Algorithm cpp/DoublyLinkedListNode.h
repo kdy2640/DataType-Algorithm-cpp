@@ -138,8 +138,7 @@ namespace DataType
 		return count;
 	}
 
-
-	//PostCondition : return pointer of dNode which data is _data. 
+	//PostCondition : Search forward and return pointer of dNode which data is _data. 
 	//                return nullptr when cannot found _data.
 	template<class T>
 	dNode<T>* list_search(dNode<T>* _headPtr, T _data)
@@ -157,6 +156,30 @@ namespace DataType
 				return now;
 			}
 			now = now->getNextPtr();
+		}
+
+		return nullptr;
+
+	}
+
+	//PostCondition : Search backward and return pointer of dNode which data is _data. 
+	//                return nullptr when cannot found _data.
+	template<class T>
+	dNode<T>* list_search_reverse(dNode<T>* _tailPtr, T _data)
+	{
+		//NullPtr Check
+		assert(!isNullPtr(_headPtr));
+
+		dNode<T>* now = _tailPtr;
+
+		// loop until now is nullptr
+		while (now != nullptr)
+		{
+			if (now->getData() == _data)
+			{
+				return now;
+			}
+			now = now->getPrevPtr();
 		}
 
 		return nullptr;
@@ -286,7 +309,7 @@ namespace DataType
 		
 	}
 
-	// list_clear, and list_copy list_search_inverse
+	// list_clear, and list_copy  
 
 	
 #pragma endregion dNodeFunction
@@ -307,7 +330,6 @@ namespace DataType
 		dNode<T>* getHeadPtr() const;
 		void setTailPtr(dNode<T>* _tailPtr);
 		dNode<T>* getTailPtr() const;
-
 
 		//Basic Fuction
 		void insert(const T& value);
