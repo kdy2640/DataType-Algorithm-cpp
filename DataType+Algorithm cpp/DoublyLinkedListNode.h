@@ -112,7 +112,7 @@ namespace DataType
 	//PostCondition : return true if _dNodePtr is nullptr. 
 	//                return false. if not. 
 	template<class T>
-	bool isNullPtr(dNode<T>* _dNodePtr)
+	bool isNullPtr(const dNode<T>* _dNodePtr)
 	{
 		if (_dNodePtr == nullptr)
 			cout << "Error : NullPointer received. \n";
@@ -123,7 +123,7 @@ namespace DataType
 
 	//PostCondition : return length(Count) of LinkedList
 	template<class T>
-	int list_length(dNode<T>* _headPtr)
+	int list_length(const dNode<T>* _headPtr)
 	{
 
 		dNode<T>* now = _headPtr;
@@ -138,10 +138,11 @@ namespace DataType
 		return count;
 	}
 
+
 	//PostCondition : Search forward and return pointer of dNode which data is _data. 
 	//                return nullptr when cannot found _data.
 	template<class T>
-	dNode<T>* list_search(dNode<T>* _headPtr, T _data)
+	dNode<T>* list_search(const dNode<T>* _headPtr, T _data)
 	{
 		//NullPtr Check
 		assert(!isNullPtr(_headPtr));
@@ -153,19 +154,20 @@ namespace DataType
 		{
 			if (now->getData() == _data)
 			{
-				return now;
+				break;
 			}
 			now = now->getNextPtr();
 		}
 
-		return nullptr;
+		return now;
 
 	}
+
 
 	//PostCondition : Search backward and return pointer of dNode which data is _data. 
 	//                return nullptr when cannot found _data.
 	template<class T>
-	dNode<T>* list_search_reverse(dNode<T>* _tailPtr, T _data)
+	dNode<T>* list_search_reverse(const dNode<T>* _tailPtr, T _data)
 	{
 		//NullPtr Check
 		assert(!isNullPtr(_headPtr));
@@ -177,15 +179,37 @@ namespace DataType
 		{
 			if (now->getData() == _data)
 			{
-				return now;
+				break;
 			}
 			now = now->getPrevPtr();
 		}
 
-		return nullptr;
+		return now;
 
 	}
 	
+
+	//PostCondition : return true when there is Node which data is _data
+	//              : return false when there is not Node which Data is _data 
+	template<class T>
+	bool check_duplication(const dNode<T>* _startPtr, T _data)
+	{
+		// NullPtr Check
+		assert(!isNullPtr(_startPtr));
+		// true when there is Node which data is _data after _startPtr
+		bool checkForward = list_search(_startPtr, _data) != nullptr;
+		 
+		// to reduce Overhead, check first.
+		if (checkForward) return true;
+
+		// true when there is Node which data is _data before _startPtr
+		bool checkBackward = list_search_reverse(_startPtr, _data) != nullptr;
+
+		if (checkBackward) return true;
+
+		return false;
+	}
+
 
 	//PreCondition  : _index is not out of range - can handle : 0 ~ Count-1
 	//PostCondition : return data of dNode which is in _index th . 
@@ -193,7 +217,7 @@ namespace DataType
 	template<class T>
 	dNode<T>* list_locate(dNode<T>* _headPtr, int _index)
 	{
-		//NullPtr Check
+		// NullPtr Check
 		assert(!isNullPtr(_headPtr));
 
 		dNode<T>* now = _headPtr;
@@ -211,7 +235,7 @@ namespace DataType
 			now = now->getNextPtr();
 		}
 
-		//Index Out of Range
+		// Index Out of Range
 		if (index <= _index)
 		{
 			cout<< "ERROR : Index Out Of Range. \n"
@@ -226,7 +250,7 @@ namespace DataType
 	template<class T>
 	void list_head_insert(dNode<T>*& _headPtr, T _data)
 	{
-		//NullPtr Check
+		// NullPtr Check
 		assert(!isNullPtr(_headPtr)) ;
 
 
@@ -244,7 +268,7 @@ namespace DataType
 	template<class T>
 	void list_insert(dNode<T>* _prevPtr, T _data)
 	{
-		//NullPtr Check
+		// NullPtr Check
 		assert(!isNullPtr(_prevPtr));
 		
 		// create new node which prevptr is nullptr and nextPtr is _prevPtr's next node.
@@ -252,7 +276,7 @@ namespace DataType
 		// set _prevPtr's nextPtr to newNode
 		_prevPtr->setNextPtr(newNode);
 
-		//Check for _prevPr is tail == ( newNode's nextPtr = null )
+		// check for _prevPr is tail == ( newNode's nextPtr = null )
 		if (newNode->getNextPtr() != nullptr)
 		{
 			//set prevPtr of newNode's nextPtr to newNode;
@@ -266,7 +290,7 @@ namespace DataType
  	template<class T>
 	void list_head_remove(dNode<T>*& _headPtr)
 	{
-		//NullPtr Check
+		// NullPtr Check
 		assert(!isNullPtr(_headPtr));
 
 		dNode<T>* temp = _headPtr;
@@ -279,9 +303,10 @@ namespace DataType
 			// set first Node's prevPtr to nullptr
 			_headPtr->setPrevPtr(nullptr);
 		}
-		//delete previous first 
+		// delete previous first 
 		delete temp;
 	}
+
 
 	//PreCondition  : _prevPtr is not be Tail Node
 	//PostCondition : remove next Node of _prevPtr and linking Node
@@ -289,12 +314,12 @@ namespace DataType
 	template<class T>
 	void list_remove(dNode<T>* _prevPtr)
 	{
-		//NullPtr Check
+		// NullPtr Check
 		assert(!isNullPtr(_prevPtr));
 		assert(!isNullPtr(_prevPtr->getNextPtr()));
 		
 		dNode<T>* temp = _prevPtr->getNextPtr();
-		//set _prevPtr's nextPtr to its next next Node
+		// set _prevPtr's nextPtr to its next next Node
 		_prevPtr->setNextPtr(temp->getNextPtr());
 
 		// Check for only one node after _prevPtr;
@@ -304,10 +329,11 @@ namespace DataType
 			temp->getNextPtr()->setPrevPtr(_prevPtr);
 		}
 
-		//delete _prevPtr's next Node
+		// delete _prevPtr's next Node
 		delete temp;
 		
 	}
+
 
 	// list_clear, and list_copy  
 
