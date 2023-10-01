@@ -121,6 +121,7 @@ namespace DataType
 	}
 
 
+	//PreCondition  : argument must be head pointer. 
 	//PostCondition : return length(Count) of LinkedList
 	template<class T>
 	int list_length(const dNode<T>* _headPtr)
@@ -170,7 +171,7 @@ namespace DataType
 	dNode<T>* list_search_reverse(const dNode<T>* _tailPtr, T _data)
 	{
 		//NullPtr Check
-		assert(!isNullPtr(_headPtr));
+		assert(!isNullPtr(_tailPtr));
 
 		dNode<T>* now = _tailPtr;
 
@@ -196,6 +197,7 @@ namespace DataType
 	{
 		// NullPtr Check
 		assert(!isNullPtr(_startPtr));
+
 		// true when there is Node which data is _data after _startPtr
 		bool checkForward = list_search(_startPtr, _data) != nullptr;
 		 
@@ -211,7 +213,8 @@ namespace DataType
 	}
 
 
-	//PreCondition  : _index is not out of range - can handle : 0 ~ Count-1
+	//PreCondition  : argument must be head pointer. 
+	//                _index is not out of range - can handle : 0 ~ Count-1
 	//PostCondition : return data of dNode which is in _index th . 
 	//				  return -1 when cannnot found _data or Index out of range
 	template<class T>
@@ -238,7 +241,7 @@ namespace DataType
 		// Index Out of Range
 		if (index <= _index)
 		{
-			cout<< "ERROR : Index Out Of Range. \n"
+			cout << "ERROR : Index Out Of Range. \n";
 		}
 
 		return -1;
@@ -246,6 +249,7 @@ namespace DataType
 	}
 
 
+	//PreCondition  : argument must be head pointer. 
 	//PostCondition : change _headPtr to new node and linking node 
 	template<class T>
 	void list_head_insert(dNode<T>*& _headPtr, T _data)
@@ -255,9 +259,10 @@ namespace DataType
 
 
 		// create newNode which prevptr is nullptr and nextPtr is _headPtr's next node.
-		dNode<T>* newNode = new dNode<T>(_data, nullptr, _headPtr->getNextPtr());
+		dNode<T>* newNode = new dNode<T>(_data, nullptr, _headPtr);
 		// change _headPtr;
 		_headPtr = newNode;
+		
 		// set next of newNode's prevPTr to new node
 		newNode->getNextPtr()->setPrevPtr(newNode);
 
@@ -285,6 +290,7 @@ namespace DataType
 	}
 
 
+	//PreCondition  : argument must be head pointer.
 	//PostCondition : remove first Node and replace _headPtr to second Node
 	//                if there is no second Node, _headPtr will be nullptr
  	template<class T>
@@ -308,7 +314,7 @@ namespace DataType
 	}
 
 
-	//PreCondition  : _prevPtr is not be Tail Node
+	//PreCondition  : _prevPtr is not be Tail Node to remove _prevPtr's next Node  
 	//PostCondition : remove next Node of _prevPtr and linking Node
 	//                if there is no next next Node, _prevPtr's nextPtr will be nullptr
 	template<class T>
@@ -322,7 +328,7 @@ namespace DataType
 		// set _prevPtr's nextPtr to its next next Node
 		_prevPtr->setNextPtr(temp->getNextPtr());
 
-		// Check for only one node after _prevPtr;
+		// Check for only one node after _prevPtr => temp->getNextPtr == nullptr
 		if (temp->getNextPtr() != nullptr)
 		{
 			//set _prevPtr's next next Node's prevPtr to _prevPtr
@@ -331,11 +337,24 @@ namespace DataType
 
 		// delete _prevPtr's next Node
 		delete temp;
-		
 	}
 
+	//PreCondition  : argument must be head pointer.
+	//PostCondition : remove all node 
+	template<class T>
+	void list_clear(dNode<T>*& _headPtr)
+	{
+		// NullPtr Check
+		assert(!isNullPtr(_headPtr));
 
-	// list_clear, and list_copy  
+		while (_headPtr != nullptr)
+		{
+			list_head_remove(_headPtr);
+		}
+
+	}
+
+	// list_copy  add feature check duplicate to insert
 
 	
 #pragma endregion dNodeFunction
