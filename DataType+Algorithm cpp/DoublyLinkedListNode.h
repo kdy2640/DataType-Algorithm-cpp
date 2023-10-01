@@ -7,9 +7,7 @@ using namespace std;
 namespace DataType
 {
 
-	// Node for arbitary data type.
-	// But, have to overload operatior = (int) - Default Constructor
-	//                       operator == (data_type) - 
+	// Node which is intenden to store int/float data
 	template<class T>
 	class dNode
 	{
@@ -251,12 +249,17 @@ namespace DataType
 
 	//PreCondition  : argument must be head pointer. 
 	//PostCondition : change _headPtr to new node and linking node
+	//				  if _HeadPtr is nullptr, change _headPtr to new Node's address.
 	//                return false when there is duplication. return true when there is not.
 	template<class T>
-	void list_head_insert(dNode<T>*& _headPtr, T _data)
+	bool list_head_insert(dNode<T>*& _headPtr, T _data)
 	{
-		// NullPtr Check
-		assert(!isNullPtr(_headPtr)) ;
+		// NullPtr Check - if null, there is no node.
+		if (isNullPtr(_headPtr))
+		{
+			_headPtr = new dNode<T>(_data, nullptr, nullptr);
+			return true;
+		}
 		// Duplication Check
 		if (check_duplication(_prevPtr, _data)) return false;
 
@@ -283,7 +286,7 @@ namespace DataType
 		if (check_duplication(_prevPtr, _data)) return false;
 		
 		// create new node which prevptr is nullptr and nextPtr is _prevPtr's next node.
-		dNode<T>* newNode = new dNode<T>(_data, nullptr, _prevPtr->getNextPtr());
+		dNode<T>* newNode = new dNode<T>(_data, _prevPtr, _prevPtr->getNextPtr());
 		// set _prevPtr's nextPtr to newNode
 		_prevPtr->setNextPtr(newNode);
 
@@ -361,7 +364,32 @@ namespace DataType
 
 	}
 
-	// list_copy , add feature check duplicate to insert , list_show_status 
+	//PreCondition  : each argument must be sourcePtr, head pointer and tail pointer.
+	//PostCondition : deep copy doubly linked list 
+	template<class T>
+	void list_copy(const dNode<T>* _sourcePtr, dNode<T>*& _headPtr,dNode<T>*& _tailPtr)
+	{
+		// NullPtr Check
+		assert(!isNullPtr(_sourcePtr));
+
+		//set _headPtr to new node which data is _sourcePtr's first node's data
+		_headPtr = list_head_insert(_headPtr, _sourcePtr->getData());
+		dNode<T>* now = _headPtr;
+		_sourcePtr = _sourcePtr->getNextPtr();
+
+		while (_sourcePtr != nullptr)
+		{
+			// insert node after now which data is _sourcePtr
+			list_insert(now, _sourcePtr->getData());
+			// move _sourcePtr to next ptr - if nullptr
+			_sourcePtr = _sourcePtr->getNextPtr();
+			// move now to tailPtr
+			now = now->getNextPtr();
+		}
+		_tailPtr = now;
+	}
+
+	// list_copy  list_show_status 
 
 	
 #pragma endregion dNodeFunction
