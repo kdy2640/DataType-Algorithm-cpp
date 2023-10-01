@@ -250,13 +250,15 @@ namespace DataType
 
 
 	//PreCondition  : argument must be head pointer. 
-	//PostCondition : change _headPtr to new node and linking node 
+	//PostCondition : change _headPtr to new node and linking node
+	//                return false when there is duplication. return true when there is not.
 	template<class T>
 	void list_head_insert(dNode<T>*& _headPtr, T _data)
 	{
 		// NullPtr Check
 		assert(!isNullPtr(_headPtr)) ;
-
+		// Duplication Check
+		if (check_duplication(_prevPtr, _data)) return false;
 
 		// create newNode which prevptr is nullptr and nextPtr is _headPtr's next node.
 		dNode<T>* newNode = new dNode<T>(_data, nullptr, _headPtr);
@@ -266,15 +268,19 @@ namespace DataType
 		// set next of newNode's prevPTr to new node
 		newNode->getNextPtr()->setPrevPtr(newNode);
 
+		return true;
 	}
 
 
     //PostCondition : insert after _prevPtr and linking node.
+	//                return false when there is duplication. return true when is not.
 	template<class T>
-	void list_insert(dNode<T>* _prevPtr, T _data)
+	bool list_insert(dNode<T>* _prevPtr, T _data)
 	{
 		// NullPtr Check
 		assert(!isNullPtr(_prevPtr));
+		// Duplication Check
+		if (check_duplication(_prevPtr, _data)) return false;
 		
 		// create new node which prevptr is nullptr and nextPtr is _prevPtr's next node.
 		dNode<T>* newNode = new dNode<T>(_data, nullptr, _prevPtr->getNextPtr());
@@ -287,6 +293,7 @@ namespace DataType
 			//set prevPtr of newNode's nextPtr to newNode;
 			newNode->getNextPtr()->setPrevPtr(newNode);
 		}
+		return true;
 	}
 
 
@@ -354,7 +361,7 @@ namespace DataType
 
 	}
 
-	// list_copy  add feature check duplicate to insert
+	// list_copy , add feature check duplicate to insert , list_show_status 
 
 	
 #pragma endregion dNodeFunction
