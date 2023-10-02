@@ -6,14 +6,10 @@
 using namespace std;
 using namespace DataType;
 
-int temp(int temp)
-{
-	temp = temp + 1;
-	return temp;
-}
 int main()
 {
-	int a = temp(5);
-	int b = 0;
+	char* temp = new char[6] {'a', 'b', 'c', '5', '6','\0'};
+	cout << temp;
+	cout << temp;
 }
 

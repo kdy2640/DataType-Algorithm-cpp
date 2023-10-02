@@ -261,7 +261,7 @@ namespace DataType
 			return true;
 		}
 		// Duplication Check
-		if (check_duplication(_prevPtr, _data)) return false;
+		if (check_duplication(_headPtr, _data)) return false;
 
 		// create newNode which prevptr is nullptr and nextPtr is _headPtr's next node.
 		dNode<T>* newNode = new dNode<T>(_data, nullptr, _headPtr);
@@ -389,7 +389,24 @@ namespace DataType
 		_tailPtr = now;
 	}
 
-	// list_copy  list_show_status 
+	//PreCondition  : argument must be head pointer.
+	//PostCondition : deep copy doubly linked list 
+	template<class T>
+	void list_show_Contents(const dNode<T>* _headPtr)
+	{
+		dNode<T>* now = _headPtr;
+		//int count = 0;
+		//// loop until now is nullptr
+		//while (now->getNextPtr() != nullptr)
+		//{
+		//	++count;
+		//	now = now->getNextPtr();
+		//}
+		//T* datas = new T[count];
+
+	}
+
+	//  list_show_status 
 
 	
 #pragma endregion dNodeFunction
@@ -543,7 +560,6 @@ namespace DataType
 		// Erase one implementation here
 		return false;
 	}
-
 
 	template<class T>
 	void OurSet<T>::show_contents() const
