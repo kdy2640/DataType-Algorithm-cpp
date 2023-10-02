@@ -132,7 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Datatype.h" />
-    <ClInclude Include="DoublyLinkedListNode.h" />
+    <ClInclude Include="DoublyLinkedListNode.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

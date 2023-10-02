@@ -2,6 +2,7 @@
 #define __DOUBLYLINKEDLISTNODE__
 #include<iostream>
 #include<cassert>
+#include<cmath>
 using namespace std;
 
 namespace DataType
@@ -113,8 +114,10 @@ namespace DataType
 	bool isNullPtr(const dNode<T>* _dNodePtr)
 	{
 		if (_dNodePtr == nullptr)
+		{
 			cout << "Error : NullPointer received. \n";
 			return true;
+		}
 		return false;
 	}
 
@@ -125,7 +128,7 @@ namespace DataType
 	int list_length(const dNode<T>* _headPtr)
 	{
 
-		dNode<T>* now = _headPtr;
+		const dNode<T>* now = _headPtr;
 		int count = 0;
 		// loop until now is nullptr
 		while (now != nullptr)
@@ -141,7 +144,31 @@ namespace DataType
 	//PostCondition : Search forward and return pointer of dNode which data is _data. 
 	//                return nullptr when cannot found _data.
 	template<class T>
-	dNode<T>* list_search(const dNode<T>* _headPtr, T _data)
+	const dNode<T>* list_search(const dNode<T>* _headPtr, T _data)
+	{
+		//NullPtr Check
+		assert(!isNullPtr(_headPtr));
+
+		const dNode<T>* now = _headPtr;
+
+		// loop until now is nullptr
+		while (now != nullptr)
+		{
+			if (now->getData() == _data)
+			{
+				break;
+			}
+			now = now->getNextPtr();
+		}
+
+		return now;
+
+	}
+
+	//PostCondition : Search forward and return pointer of dNode which data is _data. 
+	//                return nullptr when cannot found _data. it is nonconst overloading
+	template<class T>
+	dNode<T>* list_search(dNode<T>* _headPtr, T _data)
 	{
 		//NullPtr Check
 		assert(!isNullPtr(_headPtr));
@@ -162,11 +189,33 @@ namespace DataType
 
 	}
 
-
 	//PostCondition : Search backward and return pointer of dNode which data is _data. 
 	//                return nullptr when cannot found _data.
 	template<class T>
-	dNode<T>* list_search_reverse(const dNode<T>* _tailPtr, T _data)
+	const dNode<T>* list_search_reverse(const dNode<T>* _tailPtr, T _data)
+	{
+		//NullPtr Check
+		assert(!isNullPtr(_tailPtr));
+
+		const dNode<T>* now = _tailPtr;
+
+		// loop until now is nullptr
+		while (now != nullptr)
+		{
+			if (now->getData() == _data)
+			{
+				break;
+			}
+			now = now->getPrevPtr();
+		}
+
+		return now;
+
+	}
+	//PostCondition : Search backward and return pointer of dNode which data is _data. 
+	//                return nullptr when cannot found _data. it is nonconst overloading
+	template<class T>
+	dNode<T>* list_search_reverse(dNode<T>* _tailPtr, T _data)
 	{
 		//NullPtr Check
 		assert(!isNullPtr(_tailPtr));
@@ -186,6 +235,7 @@ namespace DataType
 		return now;
 
 	}
+
 	
 
 	//PostCondition : return true when there is Node which data is _data
@@ -255,7 +305,7 @@ namespace DataType
 	bool list_head_insert(dNode<T>*& _headPtr, T _data)
 	{
 		// NullPtr Check - if null, there is no node.
-		if (isNullPtr(_headPtr))
+		if (_headPtr == nullptr)
 		{
 			_headPtr = new dNode<T>(_data, nullptr, nullptr);
 			return true;
@@ -390,19 +440,71 @@ namespace DataType
 	}
 
 	//PreCondition  : argument must be head pointer.
-	//PostCondition : deep copy doubly linked list 
+	//PostCondition : print linkedlist data. return true when print normally
+	//                return false when there is error.
 	template<class T>
-	void list_show_Contents(const dNode<T>* _headPtr)
+	bool list_show_contents(const dNode<T>* _headPtr)
 	{
-		dNode<T>* now = _headPtr;
-		//int count = 0;
-		//// loop until now is nullptr
-		//while (now->getNextPtr() != nullptr)
-		//{
-		//	++count;
-		//	now = now->getNextPtr();
-		//}
-		//T* datas = new T[count];
+		// NullPtr Check
+		if (_headPtr == nullptr)
+		{
+			cout << "//////////////////////////////////////////////////////" << endl;
+			cout << "ERROR: _headPtr is nullptr." << endl;
+			cout << "//////////////////////////////////////////////////////" << endl;
+		}
+
+		const dNode<T>* now = _headPtr;
+		int count = 1;
+		// loop until now is tail
+		while (now->getNextPtr() != nullptr)
+		{
+			++count;
+			now = now->getNextPtr();
+		}
+		T* datas = new T[count];
+		
+		int index = 1;
+
+		// loop until now is head
+		while (now->getPrevPtr() != nullptr)
+		{
+			//
+			datas[count - index] = now->getData();
+
+			++index;
+			now = now->getPrevPtr();
+		}
+
+		datas[count - index] = now->getData();
+
+		cout << "//////////////////////////////////////////////////////" << endl;
+		if (index != count)
+		{
+			cout << "ERROR : linking abnormally." << endl;
+			cout << "//////////////////////////////////////////////////////" << endl;
+			return false;
+		}
+		
+		int len = *(new int((int)log10(count) + 2));
+		cout << "Index : ";
+		for (int i = 0; i < count; i++)
+		{
+			cout.width(len);
+			cout << i;
+			cout << " ";
+		}
+		cout << endl;
+		cout << "Datas : ";
+		for (int i = 0; i < count; i++)
+		{
+			cout.width(len);
+			cout << datas[i];
+			cout << " ";
+		}
+		cout << endl;
+		cout << "//////////////////////////////////////////////////////" << endl;
+		return true;
+		
 
 	}
 
