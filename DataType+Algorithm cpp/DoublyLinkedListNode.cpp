@@ -556,19 +556,23 @@ namespace DataType
 	template<class T>
 	OurSet<T>::OurSet()
 	{
-		// Constructor implementation here
+		count = 0;
+		headPtr = nullptr;
+		tailPtr = nullptr;
 	}
 
 	template<class T>
 	OurSet<T>::OurSet(const OurSet<T>& _ourSet)
 	{
-		// Constructor implementation here
+		count = _ourSet.count;
+		list_copy(_ourSet.getHeadPtr(), headPtr, tailPtr);
 	}
 
 	template<class T>
 	OurSet<T>::~OurSet()
 	{
-		// Destructor implementation here
+		count = 0;
+		list_clear(headPtr);
 	}
 
 	///////////////////////////////////////////////////////////
