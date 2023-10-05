@@ -262,8 +262,8 @@ namespace DataType
 
 	//PreCondition  : argument must be head pointer. 
 	//                _index is not out of range - can handle : 0 ~ Count-1
-	//PostCondition : return data of dNode which is in _index th . 
-	//				  return -1 when cannnot found _data or Index out of range
+	//PostCondition : return node's pointer of dNode which is in _index th . 
+	//				  return nullptr when cannnot found _data or Index out of range
 	template<class T>
 	dNode<T>* list_locate(dNode<T>* _headPtr, int _index)
 	{
@@ -279,7 +279,7 @@ namespace DataType
 		{
 			if (index == _index)
 			{
-				return now();
+				return now;
 			}
 			++index;
 			now = now->getNextPtr();
@@ -291,7 +291,7 @@ namespace DataType
 			cout << "ERROR : Index Out Of Range. \n";
 		}
 
-		return -1;
+		return now;
 
 	}
 
@@ -368,6 +368,10 @@ namespace DataType
 			// set first Node's prevPtr to nullptr
 			_headPtr->setPrevPtr(nullptr);
 		}
+		else
+		{
+			_headPtr = nullptr;
+		}
 		// delete previous first 
 		delete temp;
 	}
@@ -422,7 +426,8 @@ namespace DataType
 		assert(!isNullPtr(_sourcePtr));
 
 		//set _headPtr to new node which data is _sourcePtr's first node's data
-		_headPtr = list_head_insert(_headPtr, _sourcePtr->getData());
+		list_head_insert(_headPtr, _sourcePtr->getData());
+
 		dNode<T>* now = _headPtr;
 		_sourcePtr = _sourcePtr->getNextPtr();
 
@@ -450,6 +455,7 @@ namespace DataType
 			cout << "//////////////////////////////////////////////////////" << endl;
 			cout << "ERROR: _headPtr is nullptr." << endl;
 			cout << "//////////////////////////////////////////////////////" << endl;
+			return false;
 		}
 
 		const dNode<T>* now = _headPtr;
@@ -476,6 +482,7 @@ namespace DataType
 
 		datas[count - index] = now->getData();
 
+		cout << "//////////////////////////////////////////////////////" << endl;
 		if (index != count)
 		{
 			cout << "ERROR : linking abnormally." << endl;
@@ -500,7 +507,7 @@ namespace DataType
 			cout << " ";
 		}
 		cout << endl;
-		cout << "//////////////////////////////////////////////////////" << endl;
+		cout << "//////////////////////////////////////////////////////" << endl << endl;
 		return true;
 		
 
@@ -557,20 +564,25 @@ namespace DataType
 		count = 0;
 		headPtr = nullptr;
 		tailPtr = nullptr;
+		cout << "Default Constructor Called" << endl;
 	}
 
 	template<class T>
 	OurSet<T>::OurSet(const OurSet<T>& _ourSet)
 	{
+		headPtr = nullptr;
+		tailPtr = nullptr;
 		count = _ourSet.count;
 		list_copy(_ourSet.getHeadPtr(), headPtr, tailPtr);
+
 	}
 
 	template<class T>
 	OurSet<T>::~OurSet()
 	{
 		count = 0;
-		list_clear(headPtr);
+		if(headPtr != nullptr)	list_clear(headPtr);
+		cout << "Destructor Called." << endl;
 	}
 
 	///////////////////////////////////////////////////////////
@@ -640,7 +652,7 @@ namespace DataType
 		while (thisNow != nullptr)
 		{
 			// search thisNow's data in other
-			if (list_search(other.getHeadPtr, thisNow->getData()) == nullptr) return false;	
+			if (list_search(other.headPtr, thisNow->getData()) == nullptr) return false;	
 			thisNow = thisNow->getNextPtr();
 		}
 
@@ -662,8 +674,10 @@ namespace DataType
 	OurSet<T> OurSet<T>::operator+(const OurSet<T>& other) const
 	{
 		OurSet<T>* temp = new OurSet<T>(*this);
-		*temp += *this; *temp += other;
-		return *this;
+		
+		*temp += other;
+
+		return *temp;
 	}
 
 
@@ -671,6 +685,7 @@ namespace DataType
 	template<class T>
 	OurSet<T>& OurSet<T>::operator+=(const OurSet<T>& other)
 	{
+
 		if (headPtr == nullptr) headPtr = other.headPtr;
 
 		dNode<T>* otherNow = other.headPtr;
@@ -682,7 +697,8 @@ namespace DataType
 			otherNow = otherNow->getNextPtr();
 		}
 
-		count = list_length(headPtr);
+		count += other.count;
+
 		return *this;
 	}
 
@@ -719,16 +735,18 @@ namespace DataType
 	template<class T>
 	void OurSet<T>::show_contents() const
 	{
+
+		cout << "//////////////////////////////////////////////////////" << endl;
 		switch (count)
 		{
 		case 0:
 			cout << "There is no Data!" << endl;
 			break;
 		case 1:
-			cout << "There is 1 Data!" << endl;
+			cout << "There is only 1 Data!" << endl;
 			break;
 		default:
-			cout << "There is " << count << " Data!" << endl;
+			cout << "There are " << count << " numbers of Data!" << endl;
 			break;
 		}
 		list_show_contents(headPtr);
