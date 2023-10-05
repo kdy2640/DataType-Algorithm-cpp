@@ -476,7 +476,6 @@ namespace DataType
 
 		datas[count - index] = now->getData();
 
-		cout << "//////////////////////////////////////////////////////" << endl;
 		if (index != count)
 		{
 			cout << "ERROR : linking abnormally." << endl;
@@ -530,8 +529,8 @@ namespace DataType
 		dNode<T>* getTailPtr() const;
 
 		//Basic Fuction
-		void insert(const T& value);
-		bool erase_one(const T& value);
+		bool insert(const T _data);
+		bool erase_one();
 		void show_contents() const;
 
 		//Operation Overloading
@@ -658,12 +657,11 @@ namespace DataType
 	}
 
 
-	//PostCondition : return false if all node's data
-	//                return true if there is mismatching data
+	//PostCondition : return new Ourset which is summation of node of two Ourset
 	template<class T>
 	OurSet<T> OurSet<T>::operator+(const OurSet<T>& other) const
 	{
-		OurSet<T>* temp = new Ourset<T>(*this);
+		OurSet<T>* temp = new OurSet<T>(*this);
 		*temp += *this; *temp += other;
 		return *this;
 	}
@@ -690,23 +688,50 @@ namespace DataType
 
 	///////////////////////////////////////////////////////////
 	// Member Functions
+
+
+	//PostCondition : add one data. return true when insert normal
+	//                return false when there is duplication
 	template<class T>
-	void OurSet<T>::insert(const T& value)
+	bool OurSet<T>::insert(const T _data)
 	{
-		// Insert implementation here
+		if (list_head_insert(headPtr, _data))
+		{
+			count++;
+			return true;
+		}
+		return false;	
+
+	}
+	//PostCondition : remove one data. return true when erase normal
+	//                return false when there is no data
+	template<class T>
+	bool OurSet<T>::erase_one()
+	{
+		if (count == 0) return false;
+
+		count--;
+		list_head_remove(headPtr);
+		return true;
 	}
 
-	template<class T>
-	bool OurSet<T>::erase_one(const T& value)
-	{
-		// Erase one implementation here
-		return false;
-	}
-
+	//PostCondition : show count, index, data.
 	template<class T>
 	void OurSet<T>::show_contents() const
 	{
-		// Show contents implementation here
+		switch (count)
+		{
+		case 0:
+			cout << "There is no Data!" << endl;
+			break;
+		case 1:
+			cout << "There is 1 Data!" << endl;
+			break;
+		default:
+			cout << "There is " << count << " Data!" << endl;
+			break;
+		}
+		list_show_contents(headPtr);
 	}
 #pragma endregion OurSetMemberFunction
 
