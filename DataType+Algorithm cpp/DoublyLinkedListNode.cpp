@@ -7,7 +7,6 @@ using namespace std;
 
 namespace DataType
 {
-
 	// Node which is intenden to store int/float data
 	template<class T>
 	class dNode
@@ -581,37 +580,37 @@ namespace DataType
 	template<class T>
 	void OurSet<T>::setCount(int _count)
 	{
-		// Implementation for setCount
+		count = _count;
 	}
 
 	template<class T>
 	int OurSet<T>::getCount() const
 	{
-		// Implementation for getCount
+		return count;
 	}
 
 	template<class T>
 	void OurSet<T>::setHeadPtr(dNode<T>* _headPtr)
 	{
-		// Implementation for setHeadPtr
+		headPtr = _headPtr;
 	}
 
 	template<class T>
 	dNode<T>* OurSet<T>::getHeadPtr() const
 	{
-		// Implementation for getHeadPtr
+		return headPtr;
 	}
 
 	template<class T>
 	void OurSet<T>::setTailPtr(dNode<T>* _tailPtr)
 	{
-		// Implementation for setTailPtr
+		tailPtr = _tailPtr;
 	}
 
 	template<class T>
 	dNode<T>* OurSet<T>::getTailPtr() const
 	{
-		// Implementation for getTailPtr
+		return tailPtr;
 	}
 
 	///////////////////////////////////////////////////////////
