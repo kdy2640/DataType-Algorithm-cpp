@@ -1,5 +1,4 @@
-﻿
-#include <iostream>
+﻿#include <iostream>
 #include"DoublyLinkedListNode.cpp"
 using namespace std;
 using namespace DataType;

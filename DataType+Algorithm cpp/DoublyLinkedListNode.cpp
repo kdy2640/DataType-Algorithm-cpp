@@ -616,38 +616,75 @@ namespace DataType
 	///////////////////////////////////////////////////////////
 	// Operator Overloading
 
+
+
+	//PostCondition : Assignment
 	template<class T>
 	OurSet<T>& OurSet<T>::operator=(const OurSet<T>& other)
 	{
-		// Assignment operator implementation here
+		count = other.count;
+		list_copy(other.headPtr, headPtr, tailPtr);
 		return *this;
 	}
 
+	//PostCondition : return true if all node's data
+	//                return false if there is mismatching data
 	template<class T>
 	bool OurSet<T>::operator==(const OurSet<T>& other) const
 	{
-		// Equality operator implementation here
-		return false;
+		if (count != other.count) return false;	
+		
+		dNode<T>* thisNow = headPtr;
+
+
+		// loop until thisNow is tailPtr
+		while (thisNow != nullptr)
+		{
+			// search thisNow's data in other
+			if (list_search(other.getHeadPtr, thisNow->getData()) == nullptr) return false;	
+			thisNow = thisNow->getNextPtr();
+		}
+
+		return true;
 	}
 
+
+	//PostCondition : return false if all node's data
+	//                return true if there is mismatching data
 	template<class T>
 	bool OurSet<T>::operator!=(const OurSet<T>& other) const
 	{
-		// Inequality operator implementation here
-		return false;
+		return !(*this == other);
 	}
 
+
+	//PostCondition : return false if all node's data
+	//                return true if there is mismatching data
 	template<class T>
 	OurSet<T> OurSet<T>::operator+(const OurSet<T>& other) const
 	{
-		// Addition operator implementation here
+		OurSet<T>* temp = new Ourset<T>(*this);
+		*temp += *this; *temp += other;
 		return *this;
 	}
 
+
+	//PostCondition : add Node which have not duplication data
 	template<class T>
 	OurSet<T>& OurSet<T>::operator+=(const OurSet<T>& other)
 	{
-		// Addition-Assignment operator implementation here
+		if (headPtr == nullptr) headPtr = other.headPtr;
+
+		dNode<T>* otherNow = other.headPtr;
+		while (otherNow != nullptr)
+		{
+			// duplication check. if there is no duplication, successfully insert and move tailPtr
+			if (list_insert(tailPtr, otherNow->getData()) == true) tailPtr = tailPtr->getNextPtr();
+			
+			otherNow = otherNow->getNextPtr();
+		}
+
+		count = list_length(headPtr);
 		return *this;
 	}
 
