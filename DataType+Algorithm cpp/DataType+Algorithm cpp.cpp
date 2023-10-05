@@ -131,7 +131,19 @@ int main()
 	cout << (Bset == Cset) << endl;
 	cout << (Bset == Aset) << endl;
 	cout << (Bset != Cset) << endl;
-	cout << (Bset != Aset) << endl;
+	cout << (Bset != Aset) << endl << endl;
+
+
+
+
+	cout << "////////Checking insertSort function " << endl;
+	OurSet<value_type> Eset;
+	for (int i = 0; i < 17; i++)
+	{
+		Eset.insert((3 + 19 * i) % 17);
+	}
+	Eset.insertSort();
+
 
 	cout << "////////Checking Destructor " << endl;
 #pragma endregion OurSet_Member_Function_Test

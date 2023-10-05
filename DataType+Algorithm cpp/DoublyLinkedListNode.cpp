@@ -546,7 +546,11 @@ namespace DataType
 		bool operator!=(const OurSet<T>& other) const;
 		OurSet<T> operator+(const OurSet<T>& other) const;
 		OurSet<T>& operator+=(const OurSet<T>& other);
-		
+
+		//Operation Overloading for sort
+		dNode<T>* operator[](int _index);
+		void insertSort();
+
 	private:
 		int count;
 		dNode<T>* headPtr;
@@ -736,20 +740,58 @@ namespace DataType
 	void OurSet<T>::show_contents() const
 	{
 
-		cout << "//////////////////////////////////////////////////////" << endl;
-		switch (count)
-		{
-		case 0:
-			cout << "There is no Data!" << endl;
-			break;
-		case 1:
-			cout << "There is only 1 Data!" << endl;
-			break;
-		default:
-			cout << "There are " << count << " numbers of Data!" << endl;
-			break;
-		}
 		list_show_contents(headPtr);
+	}
+
+	////////////////////////////////////////////////////////
+	//Operator overloading for sort
+
+
+	//PostCondition : return _index th of node's pointer
+	//                return nullptr when index out of range
+	template<class T>
+	dNode<T>* OurSet<T>::operator[](int _index)
+	{
+		if (_index >= count) return nullptr;
+		return list_locate(headPtr, _index);
+	}
+
+	template<class T>
+	void OurSet<T>::insertSort()
+	{
+		dNode<T>* prevNode;
+		dNode<T>* nowNode;
+		int nowData;
+		bool trigger;
+		for (int i = 1; i < count; i++)
+		{
+			prevNode = this->operator[](i-1);
+			nowData = this->operator[](i)->getData();
+			//trigger which nowData is smallest.
+			trigger = true;
+
+
+			for (int j = 0; j < i; j++)
+			{
+				// compare data index i to index 1 ~ index i-1. continue if big , insert if small
+				dNode<T>* temp = this->operator[](i - 1 - j);
+				if (temp->getData() > nowData) continue;
+				list_remove(prevNode);
+				list_insert(temp, nowData);
+
+				trigger = false;
+				break;
+			}
+
+
+			if (trigger)
+			{
+				list_remove(prevNode);
+				list_head_insert(headPtr, nowData);
+			}
+
+			show_contents();
+		}
 	}
 #pragma endregion OurSetMemberFunction
 
