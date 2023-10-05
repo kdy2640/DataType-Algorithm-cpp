@@ -1,16 +1,22 @@
 ﻿#include<iostream>
+#include<fstream>
 #include"DoublyLinkedListNode.cpp"
 using namespace std;
 using namespace DataType;
 
 int main()
 {
+	ofstream file;
+	file.open("log.txt", ios_base::out | ios_base::app);
+	cout.rdbuf(file.rdbuf());
+
 	typedef int value_type;
 	dNode<value_type>* headPtr;
 	dNode<value_type>* copyheadPtr = nullptr;
 	dNode<value_type>* copytailPtr = nullptr;
 	headPtr = nullptr;
 
+	cout << "2020603007 김도엽 자료구조 Doubly-linked list 를 이용한 OurSet 구현" << endl << endl;
 
 	cout << "//////////////////////////////////////////////////////" << endl;
 	cout << "////////Node Function" << endl;
@@ -83,6 +89,10 @@ int main()
 	cout << "//////////////////////////////////////////////////////" << endl << endl	;
 
 
+
+
+#pragma region OurSet_Member_Function_Test
+
 	cout << "////////Checking Default Constructor." << endl;
 	OurSet<value_type> Aset;
 	OurSet<value_type> Cset;
@@ -90,10 +100,8 @@ int main()
 
 	for (int i = 0; i < 11; i++)
 	{
-		Dset.insert(i+10);
+		Dset.insert(i + 10);
 	}
-
-#pragma region OurSet_Member_Function_Test
 
 	cout << "////////Checking insert function." << endl;
 	for (int i = 0; i < 11; i++)
@@ -147,6 +155,7 @@ int main()
 
 	cout << "////////Checking Destructor " << endl;
 #pragma endregion OurSet_Member_Function_Test
+
 
 }
 
