@@ -127,8 +127,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DataType+Algorithm cpp.cpp" />
+    <ClCompile Include="DataType+Algorithm.cpp" />
     <ClCompile Include="DataType.cpp" />
+    <ClCompile Include="OurSet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Datatype.h" />
