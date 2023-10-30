@@ -7,7 +7,7 @@ using namespace DataType;
 int main()
 {
 	ofstream file;
-	file.open("log.txt", ios_base::out | ios_base::app);
+	file.open("output.txt", ios_base::out | ios_base::app);
 	cout.rdbuf(file.rdbuf());
 
 	typedef int value_type;
