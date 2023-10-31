@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="DataType+Algorithm.cpp" />
     <ClCompile Include="DataType.cpp" />
+    <ClCompile Include="OurDeque.cpp" />
     <ClCompile Include="OurSet.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -21,7 +21,7 @@ namespace DataType
 		dNode<T>* getTailPtr() const;
 
 		//Basic Fuction for Deque
-		void push_front(T _ data);
+		void push_front(T _data);
 		void push_back(T _data);
 		T pop_front();
 		T pop_back();
@@ -136,26 +136,38 @@ namespace DataType
 	template<class T>
 	void OurDeque<T>::push_front(T _data)
 	{
+
 		list_head_insert(headPtr, _data);
+		if (count == 0)
+		{
+			tailPtr = headPtr;
+		}
 		count++;
 	}
 
 	template<class T>
 	void OurDeque<T>::push_back(T _data)
 	{
-		// create new node which prevPtr is tailPtr's previous Ptr and nexPtr is tailPtr
-		dNode<T>* temp = new dNode<T>(_data,tailPtr->getPrevPtr(),tailPtr);
-		//set tailPtr's previous Ptr's nextPtr to temp
-		tailPtr->getPrevPtr()->setNextPtr(temp);
-		//set tailPtr's prevPtr to temp
-		tailPtr->setPrevPtr(temp);
-
+		if (count == 0)
+		{
+			tailPtr = new dNode<T>(_data);
+			headPtr = tailPtr;
+		}
+		else
+		{
+			// create new node which prevPtr is tailPtr Ptr and nexPtr is nullptr
+			dNode<T>* temp = new dNode<T>(_data, tailPtr, nullptr);
+			//set tailPtr's nextPtr to temp
+			tailPtr->setNextPtr(temp);
+			tailPtr = temp;
+		}
 		count++;
 	}
 
 	template<class T>
 	T OurDeque<T>::pop_front()
 	{
+		assert(!empty());
 		T tempdata = headPtr->getData();
 		list_head_remove(headPtr);
 		return tempdata;
@@ -165,6 +177,7 @@ namespace DataType
 	template<class T>
 	T OurDeque<T>::pop_back()
 	{
+		assert(!empty());
 		// save return value and delete pointer
 		T tempdata = tailPtr->getData();
 		dNode<T>* temp = tailPtr;
@@ -208,7 +221,6 @@ namespace DataType
 	template<class T>
 	void OurDeque<T>::show_contents() const
 	{
-
 		list_show_contents(headPtr);
 	}
 
