@@ -127,12 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArithmeticExpressionEvaluator.cpp" />
     <ClCompile Include="DataType+Algorithm.cpp" />
     <ClCompile Include="DataType.cpp" />
     <ClCompile Include="OurDeque.cpp" />
     <ClCompile Include="OurSet.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArithmeticExpressionEvaluator.h" />
     <ClInclude Include="Datatype.h" />
     <ClInclude Include="DoublyLinkedListNode.cpp" />
   </ItemGroup>

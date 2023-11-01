@@ -27,6 +27,9 @@
     <ClCompile Include="OurDeque.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="ArithmeticExpressionEvaluator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Datatype.h">
@@ -34,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="DoublyLinkedListNode.cpp">
       <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ArithmeticExpressionEvaluator.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
