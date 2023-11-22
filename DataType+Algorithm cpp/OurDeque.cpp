@@ -55,7 +55,6 @@ namespace DataType
 		count = 0;
 		headPtr = nullptr;
 		tailPtr = nullptr;
-		cout << "Default Constructor Called" << endl;
 	}
 
 	template<class T>
@@ -73,7 +72,6 @@ namespace DataType
 	{
 		count = 0;
 		if (headPtr != nullptr)	list_clear(headPtr);
-		cout << "Destructor Called." << endl;
 	}
 
 	///////////////////////////////////////////////////////////
@@ -170,8 +168,9 @@ namespace DataType
 		assert(!empty());
 		T tempdata = headPtr->getData();
 		list_head_remove(headPtr);
-		return tempdata;
+		if (count == 1) tailPtr = nullptr;
 		count--;
+		return tempdata;
 	}
 
 	template<class T>
@@ -181,10 +180,19 @@ namespace DataType
 		// save return value and delete pointer
 		T tempdata = tailPtr->getData();
 		dNode<T>* temp = tailPtr;
-		// move tailPtr to its prevPTr
-		tailPtr = tailPtr->getPrevPtr();
-		// set tailPtr's nextPtr to nullPtr
-		tailPtr->setNextPtr(nullptr);
+
+		if (count == 1)
+		{
+			tailPtr = nullptr;
+			headPtr = nullptr;
+		}
+		else
+		{
+			// move tailPtr to its prevPTr
+			tailPtr = tailPtr->getPrevPtr();
+			// set tailPtr's nextPtr to nullPtr
+			tailPtr->setNextPtr(nullptr);
+		}
 		
 		count--;
 		delete temp;

@@ -1,13 +1,9 @@
 ﻿#include<iostream>
 #include<fstream>
-#include "ArithmeticExpressionEvaluator.h"
-using namespace std;
-using namespace DataType;
 
+using namespace std; 
 int main()
 {
-	AEE evaluator;
-	cout << evaluator.read_expression();
-
+	cout << "hey!" << endl;
 }
 
