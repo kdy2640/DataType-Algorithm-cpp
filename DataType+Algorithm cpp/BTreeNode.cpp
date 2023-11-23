@@ -35,7 +35,7 @@ namespace DataType
 
 		// BasicFunction
 		
-		// return 0 if not founded. return 1 if founded 
+		// return 0 when there is no _data. if there are _data, return its count;  
 		int node_count(T _data) const;
 		//
 		bool node_insert(T _data);
@@ -56,7 +56,6 @@ namespace DataType
 		// these operator intend to check dataArr and subtree's data for _data
 		bool operator < (T _data);
 		bool operator > (T _data);
-
 		bool operator <= (T _data);
 		bool operator >= (T _data);
 		 
@@ -172,35 +171,7 @@ namespace DataType
 		return subTreeArr;
 	}
 
-	template<class T, int MIN>
-	int bTNode<T, MIN>::node_count(T _data) const
-	{
-		return 0;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::node_insert(T _data)
-	{
-		return false;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::node_erase_one(T _data)
-	{
-		return false;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::node_remove_biggest()
-	{
-		return false;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::node_show_contents() const
-	{
-		return false;
-	}
+	
 
 	template<class T, int MIN>
 	int bTNode<T, MIN>::getDataCount() const
@@ -248,6 +219,75 @@ namespace DataType
 		}
 
 	}
+	 
+#ifdef Set
+
+	template<class T, int MIN>
+	int bTNode<T, MIN>::node_count(T _data) const
+	{ // Set Version
+
+		// return 1 when _data is in dataArray
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] == _data) return 1;
+		}
+
+		// when subtree has _data, return 1
+		for (int i = 0; i < sCount; i++)
+		{
+			if (subTreeArr[i]->node_count(_data) == 1) return 1;
+		}
+
+		// when there is no _data, return 0
+		return 0;
+	}
+#endif // Set  
+
+	template<class T, int MIN>
+	int bTNode<T, MIN>::node_count(T _data) const
+	{ // Bag Version
+		
+		int dataCount = 0;
+		// add 1 to dataCount when _data is in dataArray
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] == _data) ++dataCount;
+		}
+
+		// add subTree's count of _data to dataCount 
+		for (int i = 0; i < sCount; i++)
+		{
+			dataCount += subTreeArr[i]->node_count(_data);
+		}
+
+
+		return dataCount;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::node_insert(T _data)
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::node_erase_one(T _data)
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::node_remove_biggest()
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::node_show_contents() const
+	{
+		return false;
+	}
+
 
 	template<class T, int MIN>
 	bool bTNode<T, MIN>::loose_insert(T _data)
