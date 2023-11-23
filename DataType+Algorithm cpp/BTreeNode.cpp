@@ -11,7 +11,7 @@ namespace DataType
 	// Node which is intended to store int/float/double data
 	template <class T, int MIN>
 	class bTNode
-	{b
+	{
 	public:
 		static const int MAX = MIN * 2;
 
@@ -33,7 +33,9 @@ namespace DataType
 		bTNode** getSubTree()  const;  
 
 
-		//BasicFunction
+		// BasicFunction
+		// this functions does not consider BTree's Rule
+		
 		//return false when dataArray is full. return true when add successfully
 		bool addData(T _data); 
 
@@ -49,6 +51,14 @@ namespace DataType
 		//Operator Overloading
 		T operator[](int _index);   // random access to data array
 		bTNode& operator = (const bTNode& _Node);
+		
+		// these operator intend to check dataArr and subtree's data for _data
+		bool operator <(T _data);
+		bool operator >(T _data);
+
+		bool operator <=(T _data);
+		bool operator >=(T _data);
+
 
 		int depth;
 	private:
@@ -114,7 +124,7 @@ namespace DataType
 		parentPtr = nullptr;
 		dCount = 0;
 		sCount = 0;
-		depth = 0
+		depth = 0;
 	}
 
 	/////////////////////////////////////////////////////////////////
@@ -220,6 +230,65 @@ namespace DataType
 	bool bTNode<T, MIN>::isEmpty() const
 	{
 		return (dCount == 0) ? true : false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::operator<(T _data)
+	{ 
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] >= _data) return false;
+		}
+		for (int i = 0; i < sCount; i++)
+		{
+			if ((*subTreeArr[i] < _data) == false) return false;
+		}
+
+		return true;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::operator>(T _data)
+	{
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] <= _data) return false;
+		}
+		for (int i = 0; i < sCount; i++)
+		{
+			if ((*subTreeArr[i] > _data) == false) return false;
+		} 
+		return true;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::operator<=(T _data)
+	{
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] > _data) return false;
+		}
+		for (int i = 0; i < sCount; i++)
+		{
+			if ((*subTreeArr[i] <= _data) == false ) return false;
+		}
+
+		return true;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::operator>=(T _data)
+	{
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] < _data) return false;
+		}
+		for (int i = 0; i < sCount; i++)
+		{
+			if ((*subTreeArr[i] >= _data) == false) return false;
+		}
+
+		return true;
 	}
 
 	template<class T, int MIN>
