@@ -34,36 +34,47 @@ namespace DataType
 
 
 		// BasicFunction
-		// this functions does not consider BTree's Rule
 		
-		//return false when dataArray is full. return true when add successfully
-		bool addData(T _data); 
+		// return 0 if not founded. return 1 if founded 
+		int node_count(T _data) const;
+		//
+		bool node_insert(T _data);
+		//
+		bool node_erase_one(T _data);
+		//
+		bool node_remove_biggest();
+		//
+		bool node_show_contents() const;
+		//
+		bool node_remove_biggest();
 
-		// return false when there is no _data in dataArray. return true when delete successfully
-		bool deleteData(T _data); 
-
-		// return -1 when there is no _data in dataArray. return index when there is _data in dataArray
-		int findData(T _data) const;
-
-		// return true when dataArray is empty;
-		bool isEmpty() const;
 
 		//Operator Overloading
 		T operator[](int _index);   // random access to data array
 		bTNode& operator = (const bTNode& _Node);
 		
 		// these operator intend to check dataArr and subtree's data for _data
-		bool operator <(T _data);
-		bool operator >(T _data);
+		bool operator < (T _data);
+		bool operator > (T _data);
 
-		bool operator <=(T _data);
-		bool operator >=(T _data);
-
-
+		bool operator <= (T _data);
+		bool operator >= (T _data);
+		 
 		int depth;
 	private:
 
 		void sort(); // dataArray must be sorted
+
+
+		//
+		bool loose_insert(T _data);
+		//
+		bool loose_erase_one(T _data);
+		//
+		bool fix_shortage();
+		//
+		bool fix_excess();
+
 
 		bTNode* parentPtr;
 		bTNode** subTreeArr;
@@ -162,6 +173,36 @@ namespace DataType
 	}
 
 	template<class T, int MIN>
+	int bTNode<T, MIN>::node_count(T _data) const
+	{
+		return 0;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::node_insert(T _data)
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::node_erase_one(T _data)
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::node_remove_biggest()
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::node_show_contents() const
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
 	int bTNode<T, MIN>::getDataCount() const
 	{
 		return dCount;
@@ -174,122 +215,7 @@ namespace DataType
 	}
 
 	/////////////////////////////////////////////////////////////////
-	// Basic Function
-	// doesn't care about Rule of BTree 
-
-	//return false when dataArray is full.
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::addData(T _data)
-	{
-		if (dCount == MAX)
-		{
-			std::cout << "ERROR : BTreeNode's DataArray is Full." << std::endl;
-			return false;
-		}
-
-		dataArr[dCount++] = _data;
-		sort();
-		return true;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::deleteData(T _data)
-	{
-		bool found = false;
-		for (int i = 0; i < dCount; i++)
-		{
-			if (dataArr[i] == _data)
-			{
-				found = true;
-				dataArr[i] = dataArr[dCount--];
-				sort();
-				break;
-			}
-		}
-
-		return found;
-	}
-
-	template<class T, int MIN>
-	int bTNode<T, MIN>::findData(T _data) const
-	{
-		int index = -1;
-		for (int i = 0; i < dCount; i++)
-		{
-			if (dataArr[i] == _data)
-			{
-				index = i;
-				break;
-			}
-		}
-
-		return index;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::isEmpty() const
-	{
-		return (dCount == 0) ? true : false;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::operator<(T _data)
-	{ 
-		for (int i = 0; i < dCount; i++)
-		{
-			if (dataArr[i] >= _data) return false;
-		}
-		for (int i = 0; i < sCount; i++)
-		{
-			if ((*subTreeArr[i] < _data) == false) return false;
-		}
-
-		return true;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::operator>(T _data)
-	{
-		for (int i = 0; i < dCount; i++)
-		{
-			if (dataArr[i] <= _data) return false;
-		}
-		for (int i = 0; i < sCount; i++)
-		{
-			if ((*subTreeArr[i] > _data) == false) return false;
-		} 
-		return true;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::operator<=(T _data)
-	{
-		for (int i = 0; i < dCount; i++)
-		{
-			if (dataArr[i] > _data) return false;
-		}
-		for (int i = 0; i < sCount; i++)
-		{
-			if ((*subTreeArr[i] <= _data) == false ) return false;
-		}
-
-		return true;
-	}
-
-	template<class T, int MIN>
-	bool bTNode<T, MIN>::operator>=(T _data)
-	{
-		for (int i = 0; i < dCount; i++)
-		{
-			if (dataArr[i] < _data) return false;
-		}
-		for (int i = 0; i < sCount; i++)
-		{
-			if ((*subTreeArr[i] >= _data) == false) return false;
-		}
-
-		return true;
-	}
+	// Basic Function 
 
 	template<class T, int MIN>
 	void bTNode<T, MIN>::sort()
@@ -323,6 +249,93 @@ namespace DataType
 
 	}
 
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::loose_insert(T _data)
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::loose_erase_one(T _data)
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::fix_shortage()
+	{
+		return false;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::fix_excess()
+	{
+		return false;
+	}
+
+
+
+	/////////////////////////////////////////////////////////////////
+	// Operator Overloading
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::operator<(T _data)
+	{
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] >= _data) return false;
+		}
+		for (int i = 0; i < sCount; i++)
+		{
+			if ((*subTreeArr[i] < _data) == false) return false;
+		}
+
+		return true;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::operator>(T _data)
+	{
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] <= _data) return false;
+		}
+		for (int i = 0; i < sCount; i++)
+		{
+			if ((*subTreeArr[i] > _data) == false) return false;
+		}
+		return true;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::operator<=(T _data)
+	{
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] > _data) return false;
+		}
+		for (int i = 0; i < sCount; i++)
+		{
+			if ((*subTreeArr[i] <= _data) == false) return false;
+		}
+
+		return true;
+	}
+
+	template<class T, int MIN>
+	bool bTNode<T, MIN>::operator>=(T _data)
+	{
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] < _data) return false;
+		}
+		for (int i = 0; i < sCount; i++)
+		{
+			if ((*subTreeArr[i] >= _data) == false) return false;
+		}
+
+		return true;
+	}
 
 
 #pragma endregion bTNodeFunction
