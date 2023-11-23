@@ -11,17 +11,17 @@ namespace DataType
 	// Node which is intended to store int/float/double data
 	template <class T, int MIN>
 	class bTNode
-	{
+	{b
 	public:
 		static const int MAX = MIN * 2;
 
 		//Constructor and Desturctor
-		bTNode(bTNode* _rootPtr = nullptr);
+		bTNode(bTNode* _parentPtr = nullptr);
 		bTNode(const bTNode& _Node);
 		~bTNode();
 
 		//Accessor and Mutator - there is no mutator of subTreeArr & dataArr for improving safety
-		void setRootPtr(bTNode* _rootPtr);
+		void setRootPtr(bTNode* _parentPtr);
 		void setDataCount(int _count);
 		void setSubTreeCount(int _count);
 
@@ -50,11 +50,12 @@ namespace DataType
 		T operator[](int _index);   // random access to data array
 		bTNode& operator = (const bTNode& _Node);
 
+		int depth;
 	private:
 
 		void sort(); // dataArray must be sorted
 
-		bTNode* rootPtr;
+		bTNode* parentPtr;
 		bTNode** subTreeArr;
 		T* dataArr;
 		int dCount;
@@ -68,20 +69,21 @@ namespace DataType
 
 
 	template<class T, int MIN>
-	bTNode<T, MIN>::bTNode(bTNode* _rootPtr)
+	bTNode<T, MIN>::bTNode(bTNode* _parentPtr)
 	{
-		rootPtr = _rootPtr;
+		parentPtr = _parentPtr;
 		dataArr = new T[MAX + 1];
 		subTreeArr = new bTNode * [MAX + 1];
-		dCount = 0; sCount = 0;
+		dCount = 0; sCount = 0; depth = 0;
 	}
 
 	template<class T, int MIN>
 	bTNode<T, MIN>::bTNode(const bTNode& _Node)
 	{
-		rootPtr = _Node.rootPtr;
+		parentPtr = _Node.parentPtr;
 		dCount = _Node.dCount;
 		sCount = _Node.sCount;
+		depth = _Node.depth;
 		dataArr = new T[MAX + 1];
 		subTreeArr = new bTNode * [MAX + 1];
 
@@ -109,18 +111,19 @@ namespace DataType
 
 		delete[] subTreeArr;
 
-		rootPtr = nullptr;
+		parentPtr = nullptr;
 		dCount = 0;
 		sCount = 0;
+		depth = 0
 	}
 
 	/////////////////////////////////////////////////////////////////
 	// Accessor and Mutator
 
 	template<class T, int MIN>
-	void bTNode<T, MIN>::setRootPtr(bTNode* _rootPtr)
+	void bTNode<T, MIN>::setRootPtr(bTNode* _parentPtr)
 	{
-		rootPtr = _rootPtr;
+		parentPtr = _parentPtr;
 	}
 
 	template<class T, int MIN>
@@ -139,7 +142,7 @@ namespace DataType
 	template<class T, int MIN>
 	bTNode<T, MIN>* bTNode<T, MIN>::getRootPtr() const
 	{
-		return rootPtr;
+		return parentPtr;
 	}
 
 	template<class T, int MIN>
