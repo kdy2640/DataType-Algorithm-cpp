@@ -1,29 +1,45 @@
-﻿#include<iostream>
-#include<fstream>
+﻿
 #include"BTreeNode.cpp"
-#include <sstream>
+#include <sstream> 
+#include <cassert>
+#include<iostream>
+#include<fstream>
 
-using namespace std; 
+using namespace std;  
+
 using namespace DataType;
 
-int main()
-{
+int main() {
+    // [] 연산자 테스트 케이스
+    bTNode<int, 2> node;
+    node[0] = 10;
+    node[1] = 20;
+    node[2] = 30;
 
-    DataType::bTNode<int, 4> bTreeNode; // MIN 값을 2로 가정한 bTNode 인스턴스 생성
+    // 기본 접근 테스트
+    assert(node[0] == 10);
+    assert(node[1] == 20);
+    assert(node[2] == 30);
 
-    // 데이터를 무작위 순서로 추가
-    int dataToAdd[] = { 3, 1, 4, 2, 9, 5, 7, 8, 6 };
-    std::cout << "Adding data in random order..." << std::endl;
-    for (int i = 0; i < 9; i++) {
-        bTreeNode.addData(dataToAdd[i]);
-        std::cout << "Added " << dataToAdd[i] << std::endl;
-    }
+    //출력
+    cout << node[0] << node[1] << node[2] << endl;
+    // 값 수정 테스트
+    node[1] = 25;
+    assert(node[1] == 25);
 
-    // 각 데이터의 위치 확인
-    std::cout << "Checking positions of data..." << std::endl;
-    for (int i = 1; i <= 9; i++) {
-        int index = bTreeNode.findData(i);
-        std::cout << "Position of " << i << ": " << index << std::endl;
-    }
-}
+    // = 연산자 테스트 케이스
+    bTNode<int, 2> newNode;
+    newNode = node; // 기본 복사 테스트
 
+    // 복사된 값 확인
+    assert(newNode[0] == 10);
+    assert(newNode[1] == 25);
+    assert(newNode[2] == 30);
+
+    // 자기 대입 테스트
+    node = node;
+    assert(node[1] == 25); // 값이 변경되지 않았는지 확인
+
+    std::cout << "모든 테스트가 성공적으로 완료되었습니다.\n";
+    return 0;
+} 
