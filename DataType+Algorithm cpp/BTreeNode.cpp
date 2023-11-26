@@ -56,6 +56,10 @@ namespace DataType
 		bool operator > (T _data);
 		bool operator <= (T _data);
 		bool operator >= (T _data);
+
+		// depth + 1 , depth - 1
+		void operator ++ (int); 
+		void operator--(int);
 		 
 		int depth;
 	private:
@@ -477,6 +481,25 @@ namespace DataType
 		}
 
 		return true;
+	}
+
+	template<class T, int MIN>
+	void bTNode<T, MIN>::operator++(int)
+	{
+		depth++;
+		for (int i = 0; i < sCount; i++)
+		{
+			(*subTreeArr[i])++;
+		}
+	}	
+	template<class T, int MIN>
+	void bTNode<T, MIN>::operator--(int)
+	{
+		depth--;
+		for (int i = 0; i < sCount; i++)
+		{
+			(*subTreeArr[i])--;
+		}
 	}
 
 
