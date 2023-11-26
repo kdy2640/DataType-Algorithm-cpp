@@ -319,6 +319,53 @@ namespace DataType
 	// Operator Overloading
 
 	template<class T, int MIN>
+	T& bTNode<T, MIN>::operator[](int _index)
+	{
+		if (_index > dCount && _index < 0)
+		{
+			std::cout << "ERROR : Index Out Of Range. \n";
+		}
+		return dataArr[_index];
+	}
+
+	template<class T, int MIN>
+	T& bTNode<T, MIN>::operator[](int _index) const
+	{
+		if (_index > dCount && _index < 0)
+		{
+			std::cout << "ERROR : Index Out Of Range. \n";
+		}
+		return dataArr[_index];
+	}
+
+	template<class T, int MIN>
+	bTNode<T, MIN>& bTNode<T, MIN>::operator=(const bTNode& _node)
+	{
+		// Check Self-assignment
+		if (this == &_node) { return *this; }
+
+		parentPtr = _node.getParentPtr();
+		depth = _node.depth;
+		sCount = _node.getSubTreeCount();
+		dCount = _node.getDataCount();
+
+		//data copy
+		for (int i = 0; i < dCount; i++)
+		{
+			dataArr[i] = _node.operator[](i);
+		}
+		//subtree deepcopy
+		for (int i = 0; i < sCount; i++)
+		{
+			delete subTreeArr[i];
+			subTreeArr[i] = new bTNode<T, MIN>();
+			*(subTreeArr[i]) = *(_node.getSubTree()[i]);
+		}
+		return *this;
+
+	}
+
+	template<class T, int MIN>
 	bool bTNode<T, MIN>::operator<(T _data)
 	{
 		for (int i = 0; i < dCount; i++)
