@@ -45,6 +45,8 @@ namespace DataType
 		if (_rootPtr == nullptr)
 		{
 			rootPtr = new bTNode<T, MIN>();
+			rootPtr->depth = 0;
+			rootPtr->setParentPtr(nullptr);
 		}
 	}
 	template<class T, int MIN>
@@ -55,7 +57,7 @@ namespace DataType
 	template<class T, int MIN>
 	void BTreeBag<T, MIN>::setRootPtr(bTNode<T, MIN>* _rootPtr)
 	{
-		rootPtr = _rootPtr
+		rootPtr = _rootPtr;
 	}
 	template<class T, int MIN>
 	bTNode<T, MIN>* BTreeBag<T, MIN>::getRootPtr()
