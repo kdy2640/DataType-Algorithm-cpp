@@ -1,7 +1,6 @@
 
 #ifndef __BTREENODE__
 #define __BTREENODE__
-
 #include<iostream>
 
 namespace DataType
@@ -17,24 +16,24 @@ namespace DataType
 
 		//Constructor and Desturctor
 		bTNode(bTNode* _parentPtr = nullptr);
-		bTNode(const bTNode& _Node);
+		bTNode(const bTNode& _node);
 		~bTNode();
 
 		//Accessor and Mutator - there is no mutator of subTreeArr & dataArr for improving safety
-		void setRootPtr(bTNode* _parentPtr);
+		void setParentPtr(bTNode* _parentPtr);
 		void setDataCount(int _count);
 		void setSubTreeCount(int _count);
 
-		bTNode* getRootPtr() const;
+		bTNode* getParentPtr() const;
 		int getDataCount() const;
-		int getSubTreCount() const;
+		int getSubTreeCount() const;
 
 		// return Ptr of SubTreePtr's array
 		bTNode** getSubTree()  const;  
 
 
-		// BasicFunction
-		
+		// BasicFunction 
+ 
 		// return 0 when there is no _data. if there are _data, return its count;  
 		int node_count(T _data) const;
 		//
@@ -44,14 +43,13 @@ namespace DataType
 		//
 		bool node_remove_biggest();
 		//
-		bool node_show_contents() const;
-		//
-		bool node_remove_biggest();
+		bool node_show_contents() const; 
 
 
 		//Operator Overloading
-		T operator[](int _index);   // random access to data array
-		bTNode& operator = (const bTNode& _Node);
+		T& operator[](int _index);   // random access to data array
+		T& operator[](int _index) const;   // random access to data array for const 
+		bTNode& operator = (const bTNode& _node);
 		
 		// these operator intend to check dataArr and subtree's data for _data
 		bool operator < (T _data);
@@ -98,25 +96,25 @@ namespace DataType
 	}
 
 	template<class T, int MIN>
-	bTNode<T, MIN>::bTNode(const bTNode& _Node)
+	bTNode<T, MIN>::bTNode(const bTNode& _node)
 	{
-		parentPtr = _Node.parentPtr;
-		dCount = _Node.dCount;
-		sCount = _Node.sCount;
-		depth = _Node.depth;
+		parentPtr = _node.parentPtr;
+		dCount = _node.dCount;
+		sCount = _node.sCount;
+		depth = _node.depth;
 		dataArr = new T[MAX + 1];
 		subTreeArr = new bTNode * [MAX + 1];
 
 		//dataArr deep copy
 		for (int i = 0; i < dCount; i++)
 		{
-			dataArr[i] = _Node[i];
+			dataArr[i] = _node[i];
 		}
 
 		//subTreeArr deep copy
 		for (int i = 0; i < sCount; i++)
 		{
-			subTreeArr[i] = new bTNode(*_Node.subTreeArr[i]);
+			subTreeArr[i] = new bTNode(*_node.subTreeArr[i]);
 		}
 	}
 
@@ -141,7 +139,7 @@ namespace DataType
 	// Accessor and Mutator
 
 	template<class T, int MIN>
-	void bTNode<T, MIN>::setRootPtr(bTNode* _parentPtr)
+	void bTNode<T, MIN>::setParentPtr(bTNode* _parentPtr)
 	{
 		parentPtr = _parentPtr;
 	}
@@ -160,7 +158,7 @@ namespace DataType
 	}
 
 	template<class T, int MIN>
-	bTNode<T, MIN>* bTNode<T, MIN>::getRootPtr() const
+	bTNode<T, MIN>* bTNode<T, MIN>::getParentPtr() const
 	{
 		return parentPtr;
 	}
@@ -180,7 +178,7 @@ namespace DataType
 	}
 
 	template<class T, int MIN>
-	int bTNode<T, MIN>::getSubTreCount() const
+	int bTNode<T, MIN>::getSubTreeCount() const
 	{
 		return sCount;
 	}
@@ -220,8 +218,28 @@ namespace DataType
 
 	}
 	 
-#ifdef Set
+#ifdef SetVersion
+	template<class T, int MIN>
+	int bTNode<T, MIN>::node_count(T _data) const
+	{ // Bag Version
 
+		int dataCount = 0;
+		// add 1 to dataCount when _data is in dataArray
+		for (int i = 0; i < dCount; i++)
+		{
+			if (dataArr[i] == _data) ++dataCount;
+		}
+
+		// add subTree's count of _data to dataCount 
+		for (int i = 0; i < sCount; i++)
+		{
+			dataCount += subTreeArr[i]->node_count(_data);
+		}
+
+
+		return dataCount;
+	}
+#endif SetVersion   
 	template<class T, int MIN>
 	int bTNode<T, MIN>::node_count(T _data) const
 	{ // Set Version
@@ -240,28 +258,6 @@ namespace DataType
 
 		// when there is no _data, return 0
 		return 0;
-	}
-#endif // Set  
-
-	template<class T, int MIN>
-	int bTNode<T, MIN>::node_count(T _data) const
-	{ // Bag Version
-		
-		int dataCount = 0;
-		// add 1 to dataCount when _data is in dataArray
-		for (int i = 0; i < dCount; i++)
-		{
-			if (dataArr[i] == _data) ++dataCount;
-		}
-
-		// add subTree's count of _data to dataCount 
-		for (int i = 0; i < sCount; i++)
-		{
-			dataCount += subTreeArr[i]->node_count(_data);
-		}
-
-
-		return dataCount;
 	}
 
 	template<class T, int MIN>
@@ -282,6 +278,8 @@ namespace DataType
 		return false;
 	}
 
+
+
 	template<class T, int MIN>
 	bool bTNode<T, MIN>::node_show_contents() const
 	{
@@ -291,8 +289,43 @@ namespace DataType
 
 	template<class T, int MIN>
 	bool bTNode<T, MIN>::loose_insert(T _data)
-	{
-		return false;
+	{ // Set Version
+		int index = 0;
+		for (int i = 0; i <= dCount; i++)
+		{
+			if (dataArr[i] >= _data)
+			{
+				// Check for duplication
+				if (dataArr[i] == _data) return false;
+				index = i;
+			}
+			// if _data is biggest
+			if (i == dCount)
+			{
+				index = dCount;
+			}
+		}
+
+		if (sCount == 0)
+		{ 
+			//insert dataArr index th index - move each one to back
+			for (int i = dCount; i > index; i--)
+			{
+				dataArr[i] = dataArr[i - 1];
+			}
+			dataArr[index] = _data;
+			return true;
+		}
+
+		// Recursive Call
+		bool b = subTreeArr[index]->loose_insert(_data);
+		if (subTreeArr[index]->getDataCount() > MAX)
+		{
+			subTreeArr[index]->fix_excess();
+		}
+
+
+		return b;
 	}
 
 	template<class T, int MIN>
@@ -310,6 +343,28 @@ namespace DataType
 	template<class T, int MIN>
 	bool bTNode<T, MIN>::fix_excess()
 	{
+		// when dataArr is excess, it must be leaf and 2 * MIN + 1 count of data
+		
+		bTNode<T, MIN>* leftNode = new bTNode<T, MIN>(); leftNode->depth = depth + 1; leftNode->setParentPtr(this);
+		bTNode<T, MIN>* rightNode = new bTNode<T, MIN>(); rightNode->depth = depth + 1; rightNode->setParentPtr(this);
+
+		for (int i = 0; i < MIN; i++)
+		{
+
+		}
+
+
+		// if root == leaf, pick middle node and middle node be new root node
+		if (parentPtr == nullptr)
+		{
+			
+		}
+		else
+		{
+
+		}
+		// if root != leaf, pick middle node and middle node move upward to parent.
+
 		return false;
 	}
 
